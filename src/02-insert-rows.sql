@@ -1,0 +1,12 @@
+-- Add the following items to your grocery list:
+
+-- milk - 2 gallons
+-- eggs - 1 dozen
+-- butter - 12 sticks
+-- flour - 1 pound
+-- sour cream - 1 dollop
+-- apples - 2 bushels
+-- sugar - 2 pounds
+-- oj - 3 gallons
+
+-- YOUR SQL HERE --
