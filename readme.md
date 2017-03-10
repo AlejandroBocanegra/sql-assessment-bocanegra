@@ -14,17 +14,19 @@ Our grocery list looks like the following:
 - oj - 3 gallons
 
 ## Tasks
+#### Write the SQL query/ies to:
 
-1. Write SQL queries that will create a table that stores your grocery list. There are a few ways to do it, so pick one and defend it.
-1. Write the SQL queries that insert the data listed above.
-1. Write the SQL queries that find items on your list that have the same units (i.e., pounds, dollops, etc.). HINT - Consider what schema would make this easiest to do!
-1. Write the SQL queries to capitalize all of the items on your grocery list (i.e., Flour, Sugar, etc.)
-1. You decide that you are watching your figure. Remove butter and sour cream from your list.
+1. Create a table named _list_ that stores your grocery list.
+1. Insert items into your _list_ table.
+1. Find items on your list that have the units _gallons_
+1. Count all of the items on your grocery list.
+1. Remove butter and sour cream from your list and _return_ what was deleted.
 
-## How to submit
+### How to submit
 
 * Fork this repository
 * clone your fork
-* make your changes
-* commit and push
-* send a pull request to submit
+* create a branch
+* write the code necessary to get the tests to pass
+* commit and push your branch
+* create a pull request and submit
