@@ -1,6 +1,5 @@
 'use strict';
 
-const url = require('url');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const spawn = require('child_process').spawn;
