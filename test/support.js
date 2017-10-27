@@ -11,10 +11,11 @@ chai.use(chaiAsPromised);
 global.chaiAsPromised = chaiAsPromised;
 global.expect = chai.expect;
 global.dbName = 'grocery_list_test';
+global.dbURL = process.env.DATABASE_URL || 'postgres://localhost'
 
 const dbConfig = {
   client: 'pg',
-  connection: `${process.env.DATABASE_URL}/${dbName}`
+  connection: `${dbURL}/${dbName}`
 };
 
 /*
@@ -31,11 +32,11 @@ beforeEach(() => {
 // After each example, destroy the knex connection pool, so that future tests can reconnect
 afterEach(() => knex.destroy());
 
-// Make a temporary connection to default table then drop & create dbName
+// Make a temporary connection to default table, then drop & create dbName
 function resetDb(cb) {
   let knexTmp = connection({
     client: 'pg',
-    connection: `${process.env.DATABASE_URL}/postgres`
+    connection: `${dbURL}/postgres`
   })
 
   return knexTmp.raw(`DROP DATABASE IF EXISTS ${dbName};`)
