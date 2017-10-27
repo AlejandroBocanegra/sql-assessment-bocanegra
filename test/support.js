@@ -44,28 +44,3 @@ function resetDb(cb) {
     .then(result => knexTmp.destroy())
     .catch((err) => console.error)
 }
-
-function resetDb(cb) {
-  console.log('Reset url', process.env.DATABASE_URL + '/postgres', '---', url.resolve(process.env.DATABASE_URL, 'postgres'));
-  let knexTmp = connection({
-    client: 'pg',
-    connection: process.env.DATABASE_URL + '/postgres'
-  })
-
-  return new Promise((resolve, reject) => {
-    knexTmp.raw(`DROP DATABASE IF EXISTS ${dbName};`)
-      .then(result => {
-        console.log(`Dropped ${dbName}`)
-        return knexTmp.raw(`CREATE DATABASE ${dbName};`)
-      })
-      .then(result => {
-        console.log(`Created ${dbName}`)
-        knexTmp.destroy()
-        resolve()
-      })
-      .catch((err) => {
-        console.log(`Error resetting ${dbName}`, err)
-        reject(err)
-      })
-  })
-}
