@@ -1,7 +1,8 @@
 'use strict';
 
-const chai = require("chai");
-const chaiAsPromised = require("chai-as-promised");
+const url = require('url');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const spawn = require('child_process').spawn;
 const connection = require('knex');
 
@@ -11,9 +12,10 @@ chai.use(chaiAsPromised);
 global.chaiAsPromised = chaiAsPromised;
 global.expect = chai.expect;
 global.dbName = 'grocery_list_test';
+
 const dbConfig = {
   client: 'pg',
-  connection: `postgres://localhost/${dbName}`
+  connection: url.resolve(process.env.DATABASE_URL, dbName)
 };
 
 /*
@@ -30,25 +32,28 @@ beforeEach(() => {
 // After each example, destroy the knex connection pool, so that future tests can reconnect
 afterEach(() => knex.destroy());
 
-function runCommand(command, args) {
-  return new Promise((resolve, reject) => {
-    const process = spawn(command, args);
-    process.stdout.setEncoding('utf8');
-    process.stdout.on('data', debug);
-    process.stderr.setEncoding('utf8');
-    process.stderr.on('data', debug);
-    process.on('close', resolve);
-    process.on('error', reject);
+
+function resetDb(cb) {
+  console.log('Reset url', process.env.DATABASE_URL + '/postgres', '---', url.resolve(process.env.DATABASE_URL, 'postgres'));
+  let knexTmp = connection({
+    client: 'pg',
+    connection: process.env.DATABASE_URL + '/postgres'
   })
-}
 
-function resetDb() {
-  return runCommand('dropdb', ['--if-exists', dbName])
-    .then(() => runCommand('createdb', [dbName]));
-}
-
-function debug(msg) {
-  if (process.env.DEBUG) {
-    console.log(msg);
-  }
+  return new Promise((resolve, reject) => {
+    knexTmp.raw(`DROP DATABASE IF EXISTS ${dbName};`)
+      .then(result => {
+        console.log(`Dropped ${dbName}`)
+        return knexTmp.raw(`CREATE DATABASE ${dbName};`)
+      })
+      .then(result => {
+        console.log(`Created ${dbName}`)
+        knexTmp.destroy()
+        resolve()
+      })
+      .catch((err) => {
+        console.log(`Error resetting ${dbName}`, err)
+        reject(err)
+      })
+  })
 }
