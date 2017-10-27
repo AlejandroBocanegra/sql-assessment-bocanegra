@@ -15,7 +15,7 @@ global.dbName = 'grocery_list_test';
 
 const dbConfig = {
   client: 'pg',
-  connection: url.resolve(process.env.DATABASE_URL, dbName)
+  connection: `${process.env.DATABASE_URL}/${dbName}`
 };
 
 /*
@@ -32,6 +32,18 @@ beforeEach(() => {
 // After each example, destroy the knex connection pool, so that future tests can reconnect
 afterEach(() => knex.destroy());
 
+// Make a temporary connection to default table then drop & create dbName
+function resetDb(cb) {
+  let knexTmp = connection({
+    client: 'pg',
+    connection: `${process.env.DATABASE_URL}/postgres`
+  })
+
+  return knexTmp.raw(`DROP DATABASE IF EXISTS ${dbName};`)
+    .then(result => knexTmp.raw(`CREATE DATABASE ${dbName};`))
+    .then(result => knexTmp.destroy())
+    .catch((err) => console.error)
+}
 
 function resetDb(cb) {
   console.log('Reset url', process.env.DATABASE_URL + '/postgres', '---', url.resolve(process.env.DATABASE_URL, 'postgres'));
